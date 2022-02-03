@@ -37,3 +37,8 @@ PUT: http://${host}:${port}/admin/movie/:movieId
 {
     "99popularity": 99
 }
+
+DELETE: http://${host}:${port}/admin/movie/:movieId
+{
+    Authorization:${token}
+}

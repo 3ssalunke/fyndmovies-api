@@ -1,0 +1,39 @@
+GET: http://${host}:${port}/check
+
+GET: http://${host}:${port}/movies?search=${searchtext}&&page=${pageNumber}
+search & page are optional
+
+POST: http://${host}:${port}/admin/signup
+{
+    "username": "michael scott",
+    "email": "mscott@fyndmovie.com",
+    "password": "jan786"
+}
+
+
+POST: http://${host}:${port}/admin/signin
+{
+    "email": "mscott@fyndmovie.com",
+    "password": "jan786"
+}
+
+//Needs access_token
+POST: http://${host}:${port}/admin/movie
+{
+    Authorization:${token}
+}
+{
+    "99popularity": 100,
+    "name": "de dhakka",
+    "imdb_score": 9.0,
+    "director": "mahesh manjarekar",
+    "genre": ["comedy", "drama"]
+}
+
+PUT: http://${host}:${port}/admin/movie/:movieId
+{
+    Authorization:${token}
+}
+{
+    "99popularity": 99
+}

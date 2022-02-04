@@ -2,7 +2,7 @@ import { decode } from "./jwtTokenHelper";
 
 const validate = (req, res, next) => {
   //check for authorization header
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization?.split(" ")[1];
   if (!authHeader) {
     return res.status(401).json({ message: "authorization header required" });
   }

@@ -6,7 +6,6 @@ export const encode = (payload) => {
     issuer: "com.fyndmovie",
     expiresIn: "1h",
   });
-
   return token;
 };
 

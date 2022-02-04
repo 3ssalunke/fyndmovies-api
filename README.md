@@ -1,2 +1,2 @@
 # fyndmovies-api
-deployed at https://node-fyndmovies-api.herokuapp.com/movies
+deployed at https://node-fyndmovies-api.herokuapp.com

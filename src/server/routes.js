@@ -120,7 +120,7 @@ const setUpRoutes = (app) => {
   });
 
   //list all genres
-  app.get("/admin/genre", validate, async (req, res, next) => {
+  app.get("/admin/genres", validate, async (req, res, next) => {
     try {
       const genres = await Genre.findOne({}).select({ _id: 0 });
       return res.json(genres);

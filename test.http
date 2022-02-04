@@ -11,7 +11,7 @@ POST: http://${host}:${port}/admin/signup
 }
 
 
-POST: http://${host}:${port}/admin/signin
+POST: http://${host}:${port}/admin/signin -> token in response
 {
     "email": "mscott@fyndmovie.com",
     "password": "jan786"
@@ -39,6 +39,12 @@ PUT: http://${host}:${port}/admin/movie/:movieId
 }
 
 DELETE: http://${host}:${port}/admin/movie/:movieId
+{
+    Authorization:${token}
+}
+
+//for getting list of all genres
+GET: http://${host}:${port}/admin/genres
 {
     Authorization:${token}
 }

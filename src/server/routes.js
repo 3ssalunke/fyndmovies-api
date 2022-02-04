@@ -9,7 +9,7 @@ import Genre from "../db/models/Genre";
 const setUpRoutes = (app) => {
   //api status check endpoint
   app.get("/check", (_, res) => {
-    return res.json({ message: "service is up" });
+    return res.json({ status: "SUCCESS", message: "service is up" });
   });
 
   //movies endpoints
@@ -26,7 +26,7 @@ const setUpRoutes = (app) => {
         .skip(page * limit) //for pagination
         .limit(limit);
 
-      return res.json(movies);
+      return res.json({ status: "SUCCESS", result: { movies } });
     } catch (error) {
       console.log(error);
       return next(error);
@@ -44,7 +44,9 @@ const setUpRoutes = (app) => {
       !req.body.director ||
       !req.body.genre
     ) {
-      return res.status(400).json({ message: "all fields required" });
+      return res
+        .status(400)
+        .json({ status: "FAILURE", message: "all fields required" });
     }
     try {
       const newMovie = await Movie.create({
@@ -60,7 +62,7 @@ const setUpRoutes = (app) => {
         {},
         { genres: [...new Set([...genres, ...req.body.genre])] }
       );
-      return res.json({ message: "success", id: newMovie._id });
+      return res.json({ status: "SUCCESS", result: { id: newMovie._id } });
     } catch (error) {
       console.log(error);
       return next(error);
@@ -78,6 +80,7 @@ const setUpRoutes = (app) => {
       Object.keys(req.body).includes("name") //checking if name is included in post body
     ) {
       return res.status(400).json({
+        status: "FAILURE",
         message:
           "at least one field is required except name(name can not be changed)",
       });
@@ -87,7 +90,9 @@ const setUpRoutes = (app) => {
       //find the movie and update
       const updatedMovie = await Movie.findByIdAndUpdate(id, { ...req.body });
       if (!updatedMovie)
-        return res.status(400).json({ message: "movie id does not exist" });
+        return res
+          .status(400)
+          .json({ status: "FAILURE", message: "movie id does not exist" });
       if (req.body.genre) {
         //if on body new genre is added then adding it to genres collection
         const { genres } = await Genre.findOne({}).select({ _id: 0 });
@@ -96,7 +101,7 @@ const setUpRoutes = (app) => {
           { genres: [...new Set([...genres, ...req.body.genre])] }
         );
       }
-      return res.json({ message: "success", id });
+      return res.json({ status: "SUCCESS", result: { id } });
     } catch (error) {
       console.log(error);
       return next(error);
@@ -111,8 +116,10 @@ const setUpRoutes = (app) => {
       const { deletedCount } = await Movie.deleteOne({ _id: id });
       //check if movie with id deleted or not, if count is zero ie no id with that movie
       if (!deletedCount)
-        return res.status(400).json({ message: "movie id does not exist" });
-      return res.json({ message: "success", id });
+        return res
+          .status(400)
+          .json({ status: "FAILURE", message: "movie id does not exist" });
+      return res.json({ status: "SUCCESS", result: { id } });
     } catch (error) {
       console.log(error);
       return next(error);
@@ -123,7 +130,7 @@ const setUpRoutes = (app) => {
   app.get("/admin/genres", validate, async (req, res, next) => {
     try {
       const genres = await Genre.findOne({}).select({ _id: 0 });
-      return res.json(genres);
+      return res.json({ status: "SUCCESS", result: { genres } });
     } catch (error) {
       console.log(error);
       return next(error);
@@ -135,7 +142,9 @@ const setUpRoutes = (app) => {
   app.post("/admin/signup", async (req, res, next) => {
     // check for all requires fields, In future we can use joi for verifying post body
     if (!req.body.email || !req.body.password || !req.body.username) {
-      return res.status(400).json({ message: "all fields required" });
+      return res
+        .status(400)
+        .json({ status: "FAILURE", message: "all fields required" });
     }
     try {
       // find admin
@@ -143,6 +152,7 @@ const setUpRoutes = (app) => {
       //if admin exists
       if (adminExists)
         return res.status(403).json({
+          status: "FAILURE",
           message: "email is taken",
         });
       //create new admin
@@ -153,9 +163,11 @@ const setUpRoutes = (app) => {
       });
       //success message
       return res.json({
-        message: "success",
-        email,
-        username,
+        status: "SUCCESS",
+        result: {
+          email,
+          username,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -167,22 +179,31 @@ const setUpRoutes = (app) => {
   app.post("/admin/signin", async (req, res, next) => {
     // check for all required fields, In future we can use joi for verifying post body
     if (!req.body.email || !req.body.password) {
-      return res.status(400).json({ message: "all fields required" });
+      return res
+        .status(400)
+        .json({ status: "FAILURE", message: "all fields required" });
     }
     try {
       // find admin
       const admin = await Admin.findOne({ email: req.body.email });
       //if admin does not exist
       if (!admin)
-        return res.status(401).json({ message: "invalid email or password" });
+        return res
+          .status(401)
+          .json({ status: "FAILURE", message: "invalid email or password" });
       //comparing password
       if (!passwordCompare(req.body.password, admin.password)) {
-        return res.status(401).json({ message: "invalid email or password" });
+        return res
+          .status(401)
+          .json({ status: "FAILURE", message: "invalid email or password" });
       }
       //if password matches
       const authToken = encode(admin.email);
       //success message
-      return res.json({ username: admin.username, authToken });
+      return res.json({
+        status: "SUCCESS",
+        result: { username: admin.username, authToken },
+      });
     } catch (error) {
       console.error(error);
       return next(error);

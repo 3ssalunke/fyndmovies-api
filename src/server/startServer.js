@@ -15,6 +15,7 @@ setUpRoutes(app);
 //error middleware
 app.use((err, req, res, next) => {
   return res.status(500).json({
+    status: "FAILURE",
     message: err.message,
   });
 });

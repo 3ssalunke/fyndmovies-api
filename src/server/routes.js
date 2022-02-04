@@ -4,6 +4,7 @@ import hashPassword from "../helpers/hashPassword";
 import passwordCompare from "../helpers/passwordCompare";
 import { encode } from "../helpers/jwtTokenHelper";
 import validate from "../helpers/tokenValidator";
+import Genre from "../db/models/Genre";
 
 const setUpRoutes = (app) => {
   //api status check endpoint
@@ -35,7 +36,7 @@ const setUpRoutes = (app) => {
   //CRUD endpoints for admin
   //create movie
   app.post("/admin/movie", validate, async (req, res, next) => {
-    //check for all required fields, In future we can use joi for verifying post body
+    //check for all required fields, In future we can use joi like library for verifying post body
     if (
       !req.body["99popularity"] ||
       !req.body.name ||
@@ -53,6 +54,12 @@ const setUpRoutes = (app) => {
         director: req.body.director,
         genre: req.body.genre,
       });
+      //if new genre is added then adding it to genres collection
+      const { genres } = await Genre.findOne({}).select({ _id: 0 });
+      await Genre.findOneAndUpdate(
+        {},
+        { genres: [...new Set([...genres, ...req.body.genre])] }
+      );
       return res.json({ message: "success", id: newMovie._id });
     } catch (error) {
       console.log(error);
@@ -60,7 +67,7 @@ const setUpRoutes = (app) => {
     }
   });
 
-  //update movie
+  //update movie data
   app.put("/admin/movie/:id", validate, async (req, res, next) => {
     //check if at least one field is present, In future we can use joi for verifying post body
     if (
@@ -81,6 +88,14 @@ const setUpRoutes = (app) => {
       const updatedMovie = await Movie.findByIdAndUpdate(id, { ...req.body });
       if (!updatedMovie)
         return res.status(400).json({ message: "movie id does not exist" });
+      if (req.body.genre) {
+        //if on body new genre is added then adding it to genres collection
+        const { genres } = await Genre.findOne({}).select({ _id: 0 });
+        await Genre.findOneAndUpdate(
+          {},
+          { genres: [...new Set([...genres, ...req.body.genre])] }
+        );
+      }
       return res.json({ message: "success", id });
     } catch (error) {
       console.log(error);
@@ -98,6 +113,17 @@ const setUpRoutes = (app) => {
       if (!deletedCount)
         return res.status(400).json({ message: "movie id does not exist" });
       return res.json({ message: "success", id });
+    } catch (error) {
+      console.log(error);
+      return next(error);
+    }
+  });
+
+  //list all genres
+  app.get("/admin/genre", validate, async (req, res, next) => {
+    try {
+      const genres = await Genre.findOne({}).select({ _id: 0 });
+      return res.json(genres);
     } catch (error) {
       console.log(error);
       return next(error);

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node build/index.js",
-    "dev": "babel-watch -L src/index.js",
+    "dev": "nodemon --exec babel-node src/index.js",
     "build": "babel src -d build"
   },
   "keywords": [],
@@ -15,9 +15,8 @@
     "@babel/cli": "^7.17.0",
     "@babel/core": "^7.17.0",
     "@babel/node": "^7.16.8",
-    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.16.11",
-    "babel-watch": "^7.7.0"
+    "nodemon": "^2.0.15"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

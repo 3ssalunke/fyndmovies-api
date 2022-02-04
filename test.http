@@ -21,7 +21,7 @@ POST: http://${host}:${port}/admin/signin -> token in response
 //Admin specific routes, needs access_token
 POST: http://${host}:${port}/admin/movie
 {
-    Authorization:${token}
+    Authorization: Bearer ${token}
 }
 {
     "99popularity": 100,
@@ -33,7 +33,7 @@ POST: http://${host}:${port}/admin/movie
 
 PUT: http://${host}:${port}/admin/movie/:movieId
 {
-    Authorization:${token}
+    Authorization: Bearer ${token}
 }
 {
     "99popularity": 99
@@ -41,11 +41,11 @@ PUT: http://${host}:${port}/admin/movie/:movieId
 
 DELETE: http://${host}:${port}/admin/movie/:movieId
 {
-    Authorization:${token}
+    Authorization: Bearer ${token}
 }
 
 //for getting list of all genres
 GET: http://${host}:${port}/admin/genres
 {
-    Authorization:${token}
+    Authorization: Bearer ${token}
 }

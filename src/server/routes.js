@@ -23,8 +23,9 @@ const setUpRoutes = (app) => {
       const findQuery = searchtext
         ? { $or: [{ name: re }, { director: re }, { genre: re }] }
         : {}; //find query based on search query is prsent or not
+      const sort = searchtext ? {} : { imdb_score: -1 };
       const movies = await Movie.find(findQuery)
-        .sort({ imdb_score: -1 })
+        .sort(sort)
         .skip(page * limit) //for pagination
         .limit(limit);
 

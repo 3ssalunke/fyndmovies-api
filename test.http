@@ -1,7 +1,8 @@
 GET: http://${host}:${port}/check
 
 //Get all movies with pagination and search options
-//search & page are optional
+//search & page are optional 
+//one page has 30 movies limit
 GET: http://${host}:${port}/movies?search=${searchtext}&&page=${pageNumber}
 
 //Admin Auth

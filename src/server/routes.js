@@ -19,8 +19,10 @@ const setUpRoutes = (app) => {
       const limit = 30; //limit of movies per page
       const searchtext = req.query.search; //optional searchtext if coming on query params
       const page = req.query.page || 0; //optional pagenumber
-      const re = new RegExp(searchtext, "i"); //regular expressoion
-      const findQuery = searchtext ? { $text: { $search: re } } : {}; //find query based on search query is prsent or not
+      const re = new RegExp(searchtext, "gi"); //regular expressoion
+      const findQuery = searchtext
+        ? { $or: [{ name: re }, { director: re }, { genre: re }] }
+        : {}; //find query based on search query is prsent or not
       const movies = await Movie.find(findQuery)
         .sort({ imdb_score: -1 })
         .skip(page * limit) //for pagination

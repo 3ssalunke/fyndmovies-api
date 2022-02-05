@@ -12,6 +12,10 @@ app.use(express.json());
 app.use(cors());
 //all routes are in one file for now
 setUpRoutes(app);
+//landing route
+app.use("/", (req, res) => {
+  res.send("Welcome to Fynd Movies API");
+});
 //error middleware
 app.use((err, req, res, next) => {
   return res.status(500).json({

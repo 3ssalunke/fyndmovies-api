@@ -132,7 +132,7 @@ const setUpRoutes = (app) => {
   //list all genres
   app.get("/admin/genres", validate, async (req, res, next) => {
     try {
-      const genres = await Genre.findOne({}).select({ _id: 0 });
+      const { genres } = await Genre.findOne({}).select({ _id: 0 });
       return res.json({ status: "SUCCESS", result: { genres } });
     } catch (error) {
       console.log(error);

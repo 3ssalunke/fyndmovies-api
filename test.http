@@ -10,13 +10,13 @@ POST: http://${host}:${port}/admin/signup
 {
     "username": "michael scott",
     "email": "mscott@fyndmovie.com",
-    "password": "jan786"
+    "password": ""
 }
 
 POST: http://${host}:${port}/admin/signin -> token in response
 {
     "email": "mscott@fyndmovie.com",
-    "password": "jan786"
+    "password": ""
 }
 
 //Admin specific routes, needs access_token
